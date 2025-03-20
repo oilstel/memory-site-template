@@ -21,7 +21,7 @@ this memory site template is a fork of elliott's memory.elliott.computer site[1]
 
 ### customization
 
-i also think designing or customizing the cms is part of what makes memory sites useful on a personal level. they reflect how the writer thinks and sees the world. they are more than just the viewable portion.
+designing or customizing the cms is part of what makes memory sites useful on a personal level. they reflect how the writer thinks and sees the world. they are more than just the viewable portion.
 
 ### how to use this template
 
