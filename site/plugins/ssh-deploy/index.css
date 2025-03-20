@@ -1,0 +1,34 @@
+.k-ssh-deploy-field {
+  margin-bottom: 1.5rem;
+}
+
+.k-ssh-deploy-message {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  padding: 0.75rem;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+}
+
+.k-ssh-deploy-message .k-icon {
+  margin-right: 0.5rem;
+}
+
+.k-ssh-deploy-field .k-button[theme="positive"] {
+  background-color: #4CAF50;
+}
+
+.k-ssh-deploy-field .k-button[theme="positive"]:hover {
+  background-color: #45a049;
+}
+
+.k-ssh-deploy-field .k-box[theme="positive"] {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.k-ssh-deploy-field .k-box[theme="negative"] {
+  background-color: #ffebee;
+  color: #c62828;
+} 

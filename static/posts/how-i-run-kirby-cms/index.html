@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/assets/css/style.css?v=1.1" rel="stylesheet">
+            <title>How I run Kirby CMS - memory site</title>
+    
+            <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20fill%3D%22%23ea31b8%22%2F%3E%3C%2Fsvg%3E" />
+    </head>
+
+<body>
+            <a href="/" id="home" style="--hover-color: #ea31b8"></a>
+    
+<main>
+    <article class="post">
+      <header class="post-header">
+                  <h1 class="post-title">How I run Kirby CMS</h1>
+                
+        <div class="post-meta">
+                                            
+                  </div>
+      </header>
+
+      <br>
+
+              <div class="post-content">
+          <p>I use Kirby CMS for almost all my client sites. The following is a guide to how I run Kirby on a Digital Ocean droplet running Nginx on Ubuntu. Personally, I like being able to have full control over the server and auto deploy via Git but there are also much less complicated ways to run Kirby. This guide is more of a reminder for myself, but it could be adapted for other setups.</p>
+<h2>Create your droplet</h2>
+<p>On Digital Ocean's website click "create" → "droplets". Create a new droplet (server) with the following settings:</p>
+<pre><code>Ubuntu 24.10 x64
+Regular SSD 1GB / 1CPU</code></pre>
+<p><em>Add your local computer's SSH key to the droplet creation page.</em></p>
+<h2>Initial server setup tutorial</h2>
+<p>Instructs you on how to login as <code>root</code> and create a new user with <code>sudo</code> privileges.</p>
+<p>→ <em>Follow <a href="https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04">this tutorial</a></em></p>
+<h2>Install Nginx on server and create server block</h2>
+<p>Instructs you on how to install Nginx, configure the firewall, and create a server block for your website.</p>
+<p><em>→ Follow <a href="https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-20-04">this tutorial</a></em></p>
+<h2>Install PHP and PHP packages required for Kirby</h2>
+<p>In addition to PHP, Kirby requires several packages to run. More info <a href="https://getkirby.com/docs/reference/system/requirements#php-extensions">here</a>. You can install PHP and the packages with the following command:</p>
+<p><code>sudo apt install php8.3-fpm php8.3-mbstring php8.3-curl php8.3-gd php8.3-ctype php8.3-xml</code></p>
+<p>Replace <code>8.3</code> with the version of PHP you'd like to install.</p>
+<h2>Edit your Nginx server block</h2>
+<p>Run the following to edit your server block file. Replace <code>elliott.computer</code> with your server block file.</p>
+<p><code>sudo nano /etc/nginx/sites-available/elliott.computer</code></p>
+<p>Add the following to your server block. Edit the domain and <code>root</code> website path to match yours. Make sure <code>php8.3-fpm.sock</code> is pointed to the correct PHP version you installed.</p>
+<pre><code>server {
+    server_name elliott.computer;
+    root /var/www/elliott.computer;
+
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}</code></pre>
+<h2>Configure PHP for Kirby CMS.</h2>
+<p>You'll need to adjust a few settings in your <code>php.ini</code> config file. These allow for larger file uploads and avoid timeouts. The main PHP config file is located at <code>/etc/php/8.3/fpm/php.ini</code>. Replace <code>8.3</code> with your PHP version.</p>
+<p>Edit <code>php.ini</code> by running:</p>
+<p><code>sudo nano /etc/php/8.3/fpm/php.ini</code></p>
+<p>You can search for these lines in the file by using control ^W (on Mac). Here are the recommended settings:</p>
+<pre><code># Memory limit (Kirby recommends at least 128M)
+memory_limit = 256M
+
+# Maximum upload file size
+upload_max_filesize = 100M
+post_max_size = 100M
+
+# Maximum execution time
+max_execution_time = 120</code></pre>
+<h2>Deploying your site to the server using Github actions</h2>
+<p>I've found this approach works best for me though I've heard Git hooks also work fine. Also, there's always the possibility of deploying using <code>rsync</code> or FTP.</p>
+<p>On the server:</p>
+<pre><code># Go to your web directory
+cd /var/www/elliott.computer
+
+# Initialize a bare Git repository
+git init
+
+# Add your GitHub repository as remote
+git remote add origin git@github.com:username/repo-name.git</code></pre>
+<pre><code># On your server, generate a new SSH key
+ssh-keygen -t ed25519 -C "github-actions-deploy"
+
+# View and copy the public key
+cat ~/.ssh/id_ed25519.pub
+
+# View and copy the private key
+cat ~/.ssh/id_ed25519</code></pre>
+<p>Add your SSH deploy key as a secret in your Github repo:</p>
+<p>Go to 'Settings' → 'Secrets and variables' → 'Actions' and under the 'Secrets' tab add the following:</p>
+<pre><code>SERVER_HOST: Your server's IP/domain
+SERVER_USER: Your server username
+DEPLOY_KEY: The private key generated earlier</code></pre>
+<p>Create a new file in your repository at <code>/.github/workflows/deploy.yml</code>. This path has to be exactly like this.</p>
+<pre><code>name: Deploy to Digital Ocean Server
+
+on:
+  push:
+    branches:
+      - main  # Or your default branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.DEPLOY_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd /var/www/elliott.computer
+          git pull origin main</code></pre>
+<p>Now your site will automatically deploy when you push to <code>main</code>. Additionally you could create different branches that deploy to <code>staging.elliott.computer</code>, etc.</p>
+<h2>Installing Kirby</h2>
+<p>In your Kirby site you'll need to enable <code>panel.install</code> in your site's <code>config.php</code></p>
+<p>Add the following to <code>/site/config/config.php</code></p>
+<pre><code>return [
+  'panel' =&gt;[
+    'install' =&gt; true
+  ]
+];</code></pre>
+<p><em>Make sure to turn this off after installing!</em></p>
+<h2>Changing site's ownership to www-data</h2>
+<p>It's important to change the ownership of your Kirby site to <code>www-data</code>. You'll then add your user to the <code>www-data</code> group. This allows you to edit files while giving the web server and Kirby the ability to serve/edit content.</p>
+<pre><code># Add your user to www-data group
+sudo usermod -a -G www-data $USER
+
+# Set group ownership to www-data
+sudo chown -R $USER:www-data /var/www/elliott.computer</code></pre>
+<p><em>You'll need to log out of SSH and back in for the group changes to take effect!</em></p>
+<h2>Setting files and folder permissions for Kirby</h2>
+<p>You'll need to change the folder and file permissions of your entire Kirby site otherwise you won't be able to edit files from the <code>/panel</code>. It's particularly important to do this to the <code>/content</code> folder.</p>
+<p>Use these commands to set all files &amp; folders to the correct permissions:</p>
+<pre><code># Set directory permissions to 775 (drwxrwxr-x)
+sudo find /var/www/elliott.computer -type d -exec chmod 775 {} \;
+
+# Set file permissions to 644 (-rw-r--r--)
+sudo find /var/www/elliott.computer -type f -exec chmod 644 {} \;</code></pre>
+<p>Navigate to <code>http://elliott.computer/panel</code> in the browser to complete the install.</p>
+<h2>Enabling HTTPS</h2>
+<p><em>→ Follow <a href="https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-22-04">digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-22-04</a></em></p>
+<hr />
+<h2>Other tips</h2>
+<p>I never commit <code>/content</code>. I'll add <code>/content</code> and <code>/media</code> to my <code>.gitignore</code>. I always have a separate local and production <code>/content</code>. You can always sync these with <code>rsync</code>.</p>
+<h2>Helpful commands for Ubuntu / Nginx</h2>
+<pre><code># Restart PHP-FPM
+sudo systemctl restart php8.3-fpm</code></pre>
+<pre><code># Restart Nginx
+sudo systemctl restart nginx</code></pre>        </div>
+      
+          
+                        <div class="post-tags">
+                          <a href="/keys#server">server</a>,                           <a href="/keys#guide">guide</a>,                           <a href="/keys#sites">sites</a>                      </div>
+              
+              <div class="related">
+                                    <a href="/posts/how-i-update-my-website" class="small-color-block" style="background-color: #8976e2" title="How I update my website"></a>
+                              </div>
+      
+    </article>
+
+    <br><br><br><br>
+
+          <div class="post-color" style="background-color: #ea31b8; height: 100%; width: 100%; aspect-ratio: 1/1;"></div>
+    </main>
+
+<footer>
+    <div style="border: 1px solid #000000; width: 10px; height: 10px;"></div>
+    <p>This is my <a href="https://memory site">memory site</a></p>
+    <p>You can browse other sites on my computer at <a href="https://home.elliott.computer">home.elliott.computer</a></p>
+    <p>
+            </p>
+    <p>You can email me at <a href="mailto:grass@elliott.computer">grass@elliott.computer</a></p>
+    <br>
+    <div id="posts-as-hr">
+                                    <a href="/posts/1-minute-intercity" style="background-color: #90ad6b"></a>
+                                                <a href="/posts/amsterdam-day" style="background-color: #002fc9"></a>
+                                                <a href="/posts/recurring-morning-image" style="background-color: #035236"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/the-most-romatic-thing-in-the-world" style="background-color: #008c64"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/site-plots" style="background-color: #f4ebb7"></a>
+                                                <a href="/posts/word-sized-color" style="background-color: #fff711"></a>
+                                                <a href="/posts/memory-sites-special-fish-in-2025-pin-moments" style="background-color: #75aaff"></a>
+                                                <a href="/posts/e-trousers" style="background-color: #ff6a00"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/against-substack" style="background-color: #0068d8"></a>
+                                                <a href="/posts/sunday-february-16-2025" style="background-color: #ffe74f"></a>
+                                                <a href="/posts/document-based-social-media" style="background-color: #e5d437"></a>
+                                                <a href="/posts/making-special-fish-sustainable-in-2025" style="background-color: #9dc901"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/special-formatting-term" style="background-color: #420d0d"></a>
+                                                <a href="/posts/hyperspecificity-css" style="background-color: #878c00"></a>
+                                                <a href="/posts/social-media-is-just-another-website" style="background-color: #212f47"></a>
+                                                <a href="/posts/social-in-the-media" style="background-color: #2de172"></a>
+                                                <a href="/posts/special-formatting" style="background-color: #53a82c"></a>
+                                                <a href="/posts/against-markdown" style="background-color: #5ed5e5"></a>
+                                                <a href="/posts/make-up-a-memory-with-a-friend" style="background-color: #c8e250"></a>
+                                                <a href="/posts/more-drawings-from-last-year" style="background-color: #bfe236"></a>
+                                                <a href="/posts/listening-to-the-birds-in-the-keuken" style="background-color: #d6edfc"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/like-a-cloud-maker" style="background-color: #c3c698"></a>
+                                                <a href="/posts/big-event-day" style="background-color: #d800d8"></a>
+                                                <a href="/posts/dial" style="background-color: #0000cc"></a>
+                                                <a href="/posts/how-i-update-my-website" style="background-color: #8976e2"></a>
+                                                <a href="/posts/how-i-run-kirby-cms" style="background-color: #ea31b8"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/summer-2023-notebook" style="background-color: #ffe121"></a>
+                                                <a href="/posts/drawing-with-p" style="background-color: #00c174"></a>
+                                                <a href="/posts/1-minute-cloud-while-editing" style="background-color: #34c157"></a>
+                                                <a href="/posts/1-minute-of-tuesday-january-7-2025" style="background-color: #f4f4f4"></a>
+                                                <a href="/posts/more-diaristic-works-in-2025" style="background-color: #cc3179"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/passback" style="background-color: #3f9ea3"></a>
+                                                <a href="/posts/1-minute-rainy-window" style="background-color: #92aee5"></a>
+                                                <a href="/posts/1-minute-of-the-sky-today" style="background-color: #341a44"></a>
+                                                <a href="/posts/fontainebleau-tick-list" style="background-color: #d6f700"></a>
+                                                <a href="/posts/drawing-at-xp" style="background-color: #0094d3"></a>
+                                                <a href="/posts/drawings-in-motion-from-earlier-in-2024" style="background-color: #007f0c"></a>
+                                                <a href="/posts/watch-list-for-2025" style="background-color: #22145c"></a>
+                                                <span style="background-color: gray"></span>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/sites-as-writing" style="background-color: #e7f754"></a>
+                                                <a href="/posts/one-word-per-year" style="background-color: #ff00d8"></a>
+                                                <span style="background-color: gray"></span>
+                                                <span style="background-color: gray"></span>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/camera-roll" style="background-color: #00af29"></a>
+                                                <a href="/posts/www-wrapped-2024" style="background-color: #9ae200"></a>
+                                                <a href="/posts/maintenance" style="background-color: #00ddff"></a>
+                                                <a href="/posts/pin-moment" style="background-color: #0f0f0f"></a>
+                                                <a href="/posts/berkeley-2010-2014" style="background-color: #b27dc6"></a>
+                                                <a href="/posts/how-to-use-this-site" style="background-color: #ffdd00"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/one-minute-of-rush-hour" style="background-color: #16938d"></a>
+                                                <a href="/posts/6-songs-for-december-2024" style="background-color: #083a54"></a>
+                                                <a href="/posts/video-editing" style="background-color: #232323"></a>
+                                                <a href="/posts/grounding" style="background-color: #4e8e40"></a>
+                                                <a href="/posts/desk" style="background-color: #0f0f0f"></a>
+                                                <a href="/posts/cleaning-energy" style="background-color: #d5e5d6"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/summer-appreciation-post" style="background-color: #c6c300"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/radio" style="background-color: #21001b"></a>
+                                                <span style="background-color: gray"></span>
+                                                <span style="background-color: gray"></span>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/sleep-well" style="background-color: #232323"></a>
+                                                <a href="/posts/domains-as-colors" style="background-color: #ff4800"></a>
+                                                <a href="/posts/posting-quietly" style="background-color: #00e5ff24"></a>
+                                                <a href="/posts/declarations-after" style="background-color: #ecedc2"></a>
+                                                <a href="/posts/pink-sky" style="background-color: #cf96e8"></a>
+                                                <span style="background-color: gray"></span>
+                                                <a href="/posts/intention-for-this-site" style="background-color: #96127b"></a>
+                                                <a href="/posts/inside-outside" style="background-color: #008c2e63"></a>
+                                                <a href="/posts/walking-along-the-lek" style="background-color: #c9d8e8"></a>
+                                                <a href="/posts/go-back-to-go-forward" style="background-color: #723d63"></a>
+                                                <a href="/posts/big-island-memory" style="background-color: #375931"></a>
+                                                <a href="/posts/edges" style="background-color: #e93cfc"></a>
+                                                <a href="/posts/surfer" style="background-color: #00baff"></a>
+                                                <a href="/posts/water-glass-theory-of-websites" style="background-color: #a85f00"></a>
+                                                <a href="/posts/mark-in-february" style="background-color: #3d4367"></a>
+                                                <a href="/posts/onsight-site" style="background-color: #f4f4ef"></a>
+                                                <a href="/posts/chance-brush" style="background-color: #0f0f0f"></a>
+                                                <a href="/posts/on-motion" style="background-color: #002300"></a>
+                                                <a href="/posts/exploring-the-vastness-of-a-website" style="background-color: #0095d6"></a>
+                        </div>
+</footer>
+
+</body>
+</html>

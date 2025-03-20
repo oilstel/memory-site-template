@@ -1,0 +1,36 @@
+title: Home Page
+preset: page
+
+sections:
+  content:
+    type: fields
+    fields:
+
+      subheadline:
+        type: text
+        label: Subheadline
+        width: 2/3
+        
+      intro:
+        type: textarea
+        label: Intro Text
+        size: medium
+        
+      featured_posts:
+        type: pages
+        label: Featured Posts
+        multiple: true
+        max: 3
+        query: site.find('posts').children
+        
+      content:
+        type: blocks
+        label: Main Content
+        fieldsets:
+          - heading
+          - text
+          - image
+          - gallery
+          - quote
+          - video
+          - code
