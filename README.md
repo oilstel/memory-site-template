@@ -1,6 +1,6 @@
-# memory site template
+# 🍊💬 memory site template
 
-this is a template for creating your own memory site 🍊💬
+this is a template for creating your own memory site
 
 ### what is a memory site?
 
