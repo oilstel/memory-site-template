@@ -25,9 +25,8 @@ designing or customizing the cms is part of what makes memory sites useful on a 
 
 ### how to use this template
 
-the hope is that this memory site can be used as a starter template so that you don't have to start from scratch. feel free to use the parts that work for you and remove the parts that don't.
+the hope is that this memory site can be used as a starter template. feel free to use the parts that work for you and remove the parts that don't.
 
----
 
 ## technical information
 
