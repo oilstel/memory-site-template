@@ -1,6 +1,6 @@
 # memory site template
 
-this is a template for creating your own memory site
+this is a template for creating your own memory site 🍊💬
 
 ### what is a memory site
 
@@ -45,3 +45,6 @@ on most pages in the cms, you'll see a "Generate a static version of the site" b
 
 it is also possible to run kirby directly on a server (without the static site generator). it is a bit more setup and depends a lot on which server you are using. this is not covered here. using kirby directly on a server will allow you to publish more instantly to your live website, login from any computer, also create user accounts that can be shared.
 
+published in athens,
+elliott
+(sitting across from kristoffer and polina at matrozou 38)
