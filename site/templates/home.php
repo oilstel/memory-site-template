@@ -1,7 +1,5 @@
 <?php snippet('header') ?>
 
-<img src="/assets/images/03-13-2025.svg" id="home-drawing">
-
 <main class="full">
     <p style="margin-top: 0;">This site has <?= $site->find('posts')->children()->count() ?> pages and was last updated on <?= $site->find('posts')->children()->sortBy('date', 'desc')->first()->date()->toDate('l, F j, Y \a\t H:i') ?></p>
 
@@ -84,55 +82,13 @@
     sort($tags);                   
     ?>
 
-    <br><br><br><br><br><br>
-
-    <div class="tag-counts">
-        <div class="small-label">Score</div>
-        <?php
-        // Initialize an array to store tag counts
-        $tagCounts = [];
-        
-        // Get all published and listed posts
-        $publishedPosts = page('posts')->children()->published()->listed();
-        
-        // Count posts for each tag
-        foreach($tags as $tag) {
-            $count = $publishedPosts->filterBy('tags', $tag, ',')->count();
-            $tagCounts[$tag] = $count;
-        }
-        
-        // Find the minimum and maximum counts
-        $minCount = min(array_values($tagCounts));
-        $maxCount = max(array_values($tagCounts));
-        
-        // Display the counts with color gradient from red (min) to purple (max)
-        $countValues = array_values($tagCounts);
-        foreach($countValues as $i => $count): 
-            // Calculate color based on count value
-            $color = "#f0f0f0"; // Default red for minimum
-            if($count > $minCount && $maxCount > $minCount) {
-                // Calculate percentage between min and max
-                $percentage = ($count - $minCount) / ($maxCount - $minCount);
-                // Interpolate between red (#ff0000) and purple (#800080)
-                $r = floor(255 * (1 - $percentage) + 128 * $percentage);
-                $g = floor(0 * (1 - $percentage) + 0 * $percentage);
-                $b = floor(0 * (1 - $percentage) + 128 * $percentage);
-                $color = sprintf("#%02x%02x%02x", $r, $g, $b);
-            }
-            if($count == $maxCount) {
-                $color = "#800080"; // Pure purple for maximum
-            }
-        ?>
-            <span style="color: <?= $color ?>;"><?= $count ?></span><?= ($i < count($countValues) - 1) ? ', ' : '' ?>
-        <?php endforeach ?>
-    </div>
 
     <br><br><br>
 
     <div class="tags-list">
-        <div class="small-label">Containers</div>
+        <div class="small-label">Tags</div>
         <?php foreach($tags as $i => $tag): ?>
-            <a href="<?= url('keys/#' . str::slug($tag)) ?>" class="tag"><?= html($tag) ?></a><?= ($i < count($tags) - 1) ? ',' : '' ?>
+            <a href="<?= url('tags/#' . str::slug($tag)) ?>" class="tag"><?= html($tag) ?></a><?= ($i < count($tags) - 1) ? ',' : '' ?>
         <?php endforeach ?>
     </div>
 </main>

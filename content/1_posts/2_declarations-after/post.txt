@@ -1,0 +1,57 @@
+Title: :after declarations
+
+----
+
+Page-content:
+
+`<style>` is making its way into my work emails `:after` joining an inspiring [workshop](https://declarations.style/) by (link: https://ungual.digital/ text: Doriane) at Varia.
+
+Using <span style="background-color: #2ac5e8; border-radius: 3px; padding: 0 3px;">CSS</span> in very light ways is underutilized.
+
+(image: https://d2w9rnfcy7mm78.cloudfront.net/33006180/original_3b4c959c7ec1c650a7801fbaa53b27ae.png)
+
+(image: https://d2w9rnfcy7mm78.cloudfront.net/33006182/original_e2b899dd36623dbc0fb0047d9f63a128.png)
+
+<style>
+img { border: 1px solid #969696; }
+</style>
+
+----
+
+Video: 
+
+----
+
+Color: #ecedc2
+
+----
+
+Cover-image: 
+
+----
+
+Date: 2024-12-15 21:00:00
+
+----
+
+Tags: email, css
+
+----
+
+Author: 
+
+----
+
+Metatitle: 
+
+----
+
+Metadescription: 
+
+----
+
+Text: 
+
+----
+
+Uuid: iw5i5hifc4p8c1qy

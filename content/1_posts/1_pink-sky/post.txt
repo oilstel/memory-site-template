@@ -1,0 +1,65 @@
+Title: Pink sky
+
+----
+
+Page-content:
+
+(image: https://d2w9rnfcy7mm78.cloudfront.net/33000090/original_ae6564dc1b47f2782a47e9a4ac54420a.jpg)
+
+the sky is pink tonight though it appears more violet in this picture
+
+----
+
+Color: #cf96e8
+
+----
+
+Cover-image: https://d2w9rnfcy7mm78.cloudfront.net/33000090/original_ae6564dc1b47f2782a47e9a4ac54420a.jpg?1734279807?bc=0
+
+----
+
+Date: 2024-12-15 16:45:00
+
+----
+
+Tags: sky, winter
+
+----
+
+Related: 
+
+----
+
+Video: 
+
+----
+
+Author: 
+
+----
+
+Metatitle: 
+
+----
+
+Metadescription: 
+
+----
+
+Text: [{"content":{"location":"web","image":[],"src":"https://d2w9rnfcy7mm78.cloudfront.net/33000090/original_ae6564dc1b47f2782a47e9a4ac54420a.jpg?1734279807?bc=0","alt":"","caption":"","link":"","ratio":"","crop":"false"},"id":"d4a4b4bf-6f83-43af-838c-6fb170440d29","isHidden":false,"type":"image"},{"content":{"text":"<p>the sky is pink tonight though it appears more violet in this picture</p>"},"id":"4aaf3dd7-d9be-4806-a285-e1f934cff9cf","isHidden":false,"type":"text"}]
+
+----
+
+Headline: ooooo
+
+----
+
+Intro: 
+
+----
+
+Coverimage: 
+
+----
+
+Uuid: 6opr7j5hrupgigpo

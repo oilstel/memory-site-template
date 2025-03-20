@@ -37,12 +37,9 @@ columns:
       meta:
         type: fields
         fields:
-          sshDeploy:
-            label: Deploy to Server
-            type: sshDeploy
-            progress: Deploying to server...
-            success: Site successfully deployed!
-            error: Deployment failed.
+          staticSiteGenerator:
+            label: Generate a static version of the site
+            type: staticSiteGenerator
           color:
             label: Color
             type: color
@@ -98,15 +95,3 @@ columns:
               info: "{{ page.date.toDate('Y-m-d') }}"
               empty: No related posts found
               sortBy: date desc
-          
-          staticSiteGenerator:
-            label: Generate a static version of the site
-            type: staticSiteGenerator
-          
-          sshDeploy:
-            label: Deploy to Server
-            type: sshDeploy
-            progress: Deploying to server...
-            success: Site successfully deployed!
-            error: Deployment failed.
-          

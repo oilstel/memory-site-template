@@ -13,8 +13,8 @@ Icon
 # Content files
 # ---------------
 
-/content/*
-!/content/index.html
+# /content/*
+# !/content/index.html
 
 # Lock files
 # ---------------

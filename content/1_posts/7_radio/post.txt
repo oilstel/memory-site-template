@@ -1,0 +1,65 @@
+Title: Radio
+
+----
+
+Page-content: I love how radio removes the burden of choosing what to listen to. The DJ makes the choices for you.
+
+----
+
+References: 
+
+----
+
+Color: #320029
+
+----
+
+Cover-image: 
+
+----
+
+Date: 2024-12-21 19:50:00
+
+----
+
+Updated: 
+
+----
+
+Show-title: false
+
+----
+
+Hide-dates: false
+
+----
+
+Hide-color-card: false
+
+----
+
+Hide-tags: false
+
+----
+
+Tags: radio
+
+----
+
+Related: 
+
+----
+
+Author: 
+
+----
+
+Metadescription: 
+
+----
+
+Uuid: 7zat8fnnlciydwa9
+
+----
+
+Metatitle: 

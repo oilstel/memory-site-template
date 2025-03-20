@@ -1,0 +1,45 @@
+Title: Surfer
+
+----
+
+Page-content:
+
+<figure>
+<iframe src="https://sites.elliott.computer/surfer.html"></iframe>
+<figcaption>An iframe of <a href="https://sites.elliott.computer/surfer.html">sites.elliott.computer/surfer.html</a></figcaption>
+</figure>
+
+<span style="color: #73a9ff;">looking out the large panes of glass to the tarmac stretching in all directions. the airport is small, dimly lit, and crowded, but outside is drenched in sunlight and so expansive. a long line of orange dots separate us. for some reason, this makes me think of surfing and the possibility of living multiple lives. i could become a surfer, if i wanted to, even just for a moment, and that could be my way of life—catching waves, thinking about catching waves, traveling to the next wave, and hanging out with other surfers. life doesn't feel limited or routine any longer; it feels like an expanding horizon in all directions, and i can feel (in the air) the next set of waves coming</span>
+
+<style>
+iframe {filter: blur(20px); height: 50dvh;}
+iframe:hover {filter: blur(0px);}
+</style>
+
+----
+
+References: 
+
+----
+
+Color: #00baff
+
+----
+
+Cover-image: 
+
+----
+
+Date: 2024-10-13 21:00:00
+
+----
+
+Tags: 
+
+----
+
+Related: 
+
+----
+
+Uuid: yeelyavlprhsthyv
