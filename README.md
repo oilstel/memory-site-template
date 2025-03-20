@@ -32,7 +32,7 @@ the hope is that this memory site can be used as a starter template. feel free t
 
 ### cms
 
-a content management system or cms for short allows you to publish to your website without having to work with html directly. often this is useful when you are working with a client where they operate in a "no-code bubble" 🫧. this memory site uses kirby cms [1]. kirby is a cms that uses php to create "flat files" of your data. in this instance, kirby builds a static site that you can publish on the www.
+a content management system or cms for short allows you to publish to your website without having to work with html directly. often this is useful when you are working with a client where they operate in a "no-code bubble" 🫧. this memory site uses kirby cms [1]. kirby is a cms that uses php to create "flat files" of your data. in this instance, kirby builds a static site that you can publish on the www
 
 [1] https://getkirby.com/
 
