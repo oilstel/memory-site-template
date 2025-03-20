@@ -2,13 +2,13 @@
 
 this is a template for creating your own memory site 🍊💬
 
-### what is a memory site
+### what is a memory site?
 
 - mostly written for oneself, leaning more towards a diary than a blog
 - a way of documenting experiences, memories, ideas, and realizations
 - contains both short and long form writing
 
-### about this memory site?
+### about this memory site
 
 this memory site template is a fork of elliott's memory.elliott.computer site[1]. every post holds the same weight. it is loosely inspired by the zettelkasten system[2], are.na[3], zinzy.website[4], and piper haywood's[5] website. you can read more about my interest in memory sites on my memory site[6].
 
